@@ -1,6 +1,6 @@
 # TodoList App
 
-This app created vith Vue2, TaTailwind, Vuex 
+This app created vith Vue2, Tailwind, Vuex 
 
 
 ## Project Setup

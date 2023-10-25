@@ -2,6 +2,12 @@
 
 This app created vith Vue2, Tailwind, Vuex 
 
+This is my first project with Tailwind in vuejs and I used it because an employee asked me to create a todo list with Tailwind that have CRUD ...
+
+In my opinion there ara better UI framework such as Veutify and Quasar anyway if any tip you have I would appreciat let me know and contact me 
+
+ebrahim.mozafary@gmail.com
+
 
 ## Project Setup
 

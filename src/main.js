@@ -7,6 +7,8 @@ import './assets/main.css'
 import './tailwind.css'
 
 import store from './store'
+// import Vuelidate from 'vuelidate'
+// Vue.use(Vuelidate)
 
 import VueTailwind from 'vue-tailwind'
 import {

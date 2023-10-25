@@ -1,5 +1,6 @@
 <template>
   <main class="flex items-center justify-center w-full mt-36">
+
     <div class="createToDoModal fixed w-full h-full top-0 left-0 flex items-center justify-center z-10 " v-if="createModalOpen">
       <div class="absolute w-full h-full bg-gray-900 opacity-90" ></div>
   
@@ -7,32 +8,28 @@
         <div class="container overflow-hidden md:rounded-xl rounded-xl">
           <div class="relative w-full  max-h-full">
               <div class="relative bg-white rounded-xl shadow dark:bg-gray-700 ">
-                  
+           
                   <div class="p-6 ">
-                    <form data-te-validation-init>
+                    <p v-if="errorForm" class="my-2 text-sm text-red-600 dark:text-red-500">Please fill all fields! </p>
+                    <form >
+                      <datepicker format="d-MM-yyyy" placeholder="Select Date" v-model="date" class="customDate bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></datepicker>
+
+                      <!-- <datepicker v-model="date" class="mb-3 customDate w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="uniquename"></datepicker> -->
+                      <BaseTextField   :textValue="title" @myemit ="title = $event" label="ToDo Title"  />
+                      <BaseTextField   :textValue="description" @myemit ="description = $event" label="ToDo Description"  />
                       
-                      <div
-                      class="relative mb-3"
-                      data-te-input-wrapper-init
-                      data-te-validate="input"
-                      data-te-validation-ruleset="isRequired">
-                      <input
-                        type="text"
-                        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                        id="exampleFormAdvancedInput1"
-                        placeholder="Example label" />
-                      <label
-                        for="exampleFormAdvancedInput1"
-                        class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                        >Example label
-                      </label>
-                    </div>
-                    <button
-                      type="button"
-                      class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                      data-te-submit-btn-ref>
-                      Validate
-                    </button>
+                          
+                      <!-- <div class="mb-6">
+                        <label for="success" class="block mb-2 text-sm font-medium text-green-700 dark:text-green-500">Your name</label>
+                        <input type="text" id="success" class="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500" placeholder="Success input">
+                        <p class="mt-2 text-sm text-green-600 dark:text-green-500"><span class="font-medium">Well done!</span> Some success message.</p>
+                      </div>
+                      <div>
+                        <label for="error" class="block mb-2 text-sm font-medium text-red-700 dark:text-red-500">Your name</label>
+                        <input type="text" id="error" class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500" placeholder="Error input">
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oh, snapp!</span> Some error message.</p>
+                      </div> -->
+                     
                         
                         <!-- <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this TODO?</h3> -->
                         <button @click="createConfirm" data-modal-hide="popup-modal" type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 green:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
@@ -83,9 +80,9 @@
       </button>
       <div v-for="item in toDoList" :key="item.id">
         <listItemComponent :single-item="item" >
-          <button class="mb-2" @click="deleteItem(item)"><deleteIcon /></button>
-          <button class="mb-2" @click="editItem(item)"><editIcon /></button>
-          <button @click="duplicateItem(item)"><duplicateIcon /></button>
+          <button class="mb-2 text-white" @click="deleteItem(item)"><deleteIcon /></button>
+          <button class="mb-2 text-white" @click="editItem(item)"><editIcon /></button>
+          <button class="text-white" @click="duplicateItem(item)"><duplicateIcon /></button>
         </listItemComponent>
       </div>
      </div>
@@ -98,15 +95,27 @@ import deleteIcon from "@/components/icons/iconCustomDelete.vue"
 import editIcon from "@/components/icons/iconEdit.vue"
 import duplicateIcon from "@/components/icons/iconDuplicate.vue"
 import listItemComponent from "@/components/listItemComponent.vue"
-import {uuidv4} from "@/helper/helper"
+import createFormComponent from "@/components/createFormComponent.vue"
+import {uuidv4,extractDate} from "@/helper/helper"
 import store from "@/store";
 import {onMounted, ref, watch, computed} from "vue";
+import BaseTextField from "../components/baseTextField.vue"
+
+import Datepicker from 'vuejs-datepicker';
 
 
+
+onMounted(()=>{
+  
+})
 const isOpen = ref(false)
 const createModalOpen = ref(false)
 const selectedId = ref('')
 const createForm = ref(null)
+const title =ref('')
+const description =ref('')
+const date =ref(null)
+const errorForm =ref(false)
 const toDoList = computed(()=>{
   return store.getters['app/getToDoList']
 })
@@ -114,7 +123,16 @@ const createItem = ()=>{
   createModalOpen.value = true
 }
 const createConfirm = async()=>{
-  console.log("createForm");
+const newId = uuidv4()
+if(title.value && description.value && date.value){
+  const dateString = await extractDate(date.value);
+  errorForm.value= false
+  await store.dispatch("app/addToDoList",{title:title.value,description:description.value,date:dateString,id:newId.value})
+  createModalOpen.value = false
+  title.value,description.value,date.value = ''
+}else{
+  errorForm.value= true
+}
 
 }
 const deleteItem = (item) =>{
@@ -147,8 +165,18 @@ const duplicateItem = async(item) =>{
 
 </script>
 <style scoped>
-.createToDoModal .myInput{
+.createToDoModal .myInput,.customDate{
   color:black;
   border-radius: 10px;
+}
+.customDate input{
+  width:100% !important;
+}
+
+</style>
+<style>
+.vdp-datepicker input {
+  width: 100% !important;
+  background: none !important;
 }
 </style>

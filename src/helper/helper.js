@@ -6,3 +6,13 @@ export const uuidv4 = () => {
         return v.toString(16); 
     }); 
 }
+
+
+export const extractDate = (date) => { 
+    const currentDate = date;
+    const currentDayOfMonth = currentDate.getDate();
+    const currentMonth = currentDate.getMonth(); // Be careful! January is 0, not 1
+    const currentYear = currentDate.getFullYear();
+    
+    return currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
+}

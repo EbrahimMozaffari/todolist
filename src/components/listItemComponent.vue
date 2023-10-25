@@ -32,28 +32,16 @@ const checkbox = ref(false)
 const showDate = (date)=>{
   return extractDate(date)
 }
-const checkDate = ()=>{
-  const today = new Date();
-  //console.log((extractDate(props.singleItem.date) >= extractDate(today)));
-  return (extractDate(props.singleItem.date) >= extractDate(today))
-} 
 const checkingDate = computed(()=>{
   const today = new Date();
-
-// Generate yyyy-mm-dd date string
-//var formattedDate = year + "-" + month + "-" + day;
-// let formattedDate = `${day}-${month}-${year}`
-// let formattedDate1 = `${day1}-${month1}-${year1}`
-// console.log(formattedDate >= formattedDate1);
-// return (formattedDate <= formattedDate1)
   return (formatDate(props.singleItem.date) >= formatDate(today) || checkbox.value)
 })
 onMounted(()=>{
+  checkbox.value = props.singleItem.status
   //checkDate();
 })
 
 watch(checkbox,async(value,oldValue)=>{
-  //console.log("Checkbox changed", value);
   let newItem = {...props.singleItem}
   newItem.status = value
   await store.dispatch('app/editToDoList',newItem)

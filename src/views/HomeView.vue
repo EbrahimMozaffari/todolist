@@ -1,5 +1,5 @@
 <template>
-  <main class="flex items-center justify-center w-full mt-36">
+  <main class="flex items-center justify-center w-full mt-16">
     <div class="createToDoModal fixed w-full h-full top-0 left-0 flex items-center justify-center z-10 " v-if="createEditModalOpen">
       <div class="absolute w-full h-full bg-gray-900 opacity-90" ></div>
   
@@ -13,7 +13,6 @@
                     <form >
                       <datepicker format="d-MM-yyyy"  placeholder="Select Date" v-model="date" class="customDate bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></datepicker>
 
-                      <!-- <datepicker v-model="date" class="mb-3 customDate w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="uniquename"></datepicker> -->
                       <BaseTextField   :textValue="title" @myemit ="title = $event" label="ToDo Title"  />
                       <BaseTextField   :textValue="description" @myemit ="description = $event" label="ToDo Description"  />
                       
@@ -47,12 +46,6 @@
         <div class="container overflow-hidden md:rounded-xl rounded-xl">
           <div class="relative w-full max-w-md max-h-full">
               <div class="relative bg-white rounded-xl shadow dark:bg-gray-700 ">
-                  <!-- <button @click="isOpen = !isOpen" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                      </svg>
-                      <span class="sr-only">Close modal</span>
-                  </button> -->
                   <div class="p-6 text-center">
                       <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
@@ -70,7 +63,7 @@
   </div>
 
     <div class="sm:w-11/12 md:w-11/12 lg:w-6/12 w-11/12 font-sans bg-white border border-gray-200 rounded-xl shadow  dark:bg-gray-800 dark:border-gray-700 p-3 ">
-
+<!-- start container -->
       <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">ToDo List</h3>
       <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
           <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
@@ -138,13 +131,14 @@ onMounted(()=>{
 const isOpen = ref(false)
 const createEditModalOpen = ref(false)
 const selectedId = ref('')
+const statusSelected = ref('')
 const title =ref('')
 const description =ref('')
 const date =ref(null)
 const errorForm =ref(false)
 const listStatus =ref('all')
 const toDoList = computed(()=>{
-  return store.getters['app/getToDoList']
+  return store.getters['app/getFilteredList']
 })
 const createItem = ()=>{
   createEditModalOpen.value = true
@@ -152,10 +146,10 @@ const createItem = ()=>{
 const createEditConfirm = async()=>{
   if(title.value && description.value && date.value){
     if(selectedId.value){
-      await store.dispatch("app/editToDoList",{id:selectedId.value,title:title.value,description:description.value,date:date.value})
+      await store.dispatch("app/editToDoList",{id:selectedId.value,title:title.value,description:description.value,date:date.value,status:statusSelected.value})
     }else{
       let newId = await uuidv4()
-      await store.dispatch("app/addToDoList",{title:title.value,description:description.value,date:date.value,id:newId})
+      await store.dispatch("app/addToDoList",{title:title.value,description:description.value,date:date.value,id:newId,status:false})
     }
       createEditModalOpen.value = false
       errorForm.value= false
@@ -182,6 +176,7 @@ isOpen.value = false
 }
 
 const editItem = (item) =>{
+  statusSelected.value = item.status;
   selectedId.value = item.id;
   title.value = item.title;
   description.value = item.description;
@@ -203,8 +198,12 @@ watch(createEditModalOpen, (currentValue, oldValue) => {
         description.value = '';
         date.value = ''
       }
-    });
+ });
+watch(listStatus, (currentValue, oldValue) => {
+     console.log(currentValue);
+     store.dispatch('app/setFilterName',currentValue)
 
+ });
 
 </script>
 <style scoped>
@@ -221,5 +220,6 @@ watch(createEditModalOpen, (currentValue, oldValue) => {
 .vdp-datepicker input {
   width: 100% !important;
   background: none !important;
+  color: white;
 }
 </style>

@@ -1,34 +1,12 @@
 // import router from "@/router";
+import {formatDate} from "@/helper/helper"
 export const namespaced = true;
 
 const getDefaultState = () => {
   return {
-    toDOList:[
-      // {
-      //   id:'7bc41720-7131-11ee-b962-0242ac120002',
-      //   title:'Do the assessment',
-      //   description:'I have to fill some forms and questions for work',
-      //   date:Wed Oct 12 2023 16:17:00 GMT+0100 (British Summer Time),
-      //   status:false,
-      // },
-      // {
-      //   id:"7bc41bee-7131-11ee-b962-0242ac120002",
-      //   title:'complete task they wanted',
-      //   description:'I have to create todolist app with some features...',
-      //   date:Wed Oct 18 2023 16:17:00 GMT+0100 (British Summer Time),
-      //   status:false,
-      // },
-      // {
-      //   id:"7bc4204e-7131-11ee-b962-0242ac120002",
-      //   title:'send them github link',
-      //   description:'I have to upload my code on github and send them link',
-      //   date:Wed Oct 15 2023 16:17:00 GMT+0100 (British Summer Time),
-      //   status:false,
-      // },
-    ],
-    
-
-  }
+    toDOList:[],
+    filterName:'all',
+   }
 }
 
 // initial state
@@ -38,12 +16,26 @@ export const getters = {
   getToDoList(state) {
     return state.toDOList;
   },
-
+  getFilteredList(state) {
+    if(state.filterName == 'all'){
+      return state.toDOList;
+    }else if(state.filterName == 'completed'){
+      return state.toDOList.filter((todo) => todo.status == true);
+    }else if(state.filterName == 'unfinished'){
+      return state.toDOList.filter((todo) => todo.status == false);
+    }else if(state.filterName == 'expired'){
+      let today = new Date();
+      return state.toDOList.filter((todo) => formatDate(todo.date) < formatDate(today));
+    }
+  },
 };
 export const mutations = {
 
   SET_TODOLIST(state, payload) {
     state.toDOList = payload;
+  },
+  SET_FILTER_NAME(state, payload) {
+    state.filterName = payload;
   },
   ADD_TODOLIST(state, todo){
     state.toDOList.push(todo)
@@ -57,6 +49,9 @@ export const mutations = {
 export const actions = {
   setToDoList({ commit, state }, payload) {
     commit("SET_TODOLIST", payload);
+  },
+  setFilterName({ commit, state }, payload) {
+    commit("SET_FILTER_NAME", payload);
   },
   addToDoList({ commit, state }, payload) {
     commit("ADD_TODOLIST", payload);

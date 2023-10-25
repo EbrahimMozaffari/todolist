@@ -1,10 +1,10 @@
 <template>
   <main class="flex items-center justify-center w-full mt-36">
 
-    <div class="createToDoModal fixed w-full h-full top-0 left-0 flex items-center justify-center z-10 " v-if="createModalOpen">
+    <div class="createToDoModal fixed w-full h-full top-0 left-0 flex items-center justify-center z-10 " v-if="createEditModalOpen">
       <div class="absolute w-full h-full bg-gray-900 opacity-90" ></div>
   
-      <div class=" max-h-full w-6/12 mx-auto rounded-xl" >
+      <div class=" max-h-full lg:w-6/12 md:w-6/12 sm:w-10/12 w-11/12  mx-auto rounded-xl" >
         <div class="container overflow-hidden md:rounded-xl rounded-xl">
           <div class="relative w-full  max-h-full">
               <div class="relative bg-white rounded-xl shadow dark:bg-gray-700 ">
@@ -30,12 +30,10 @@
                         <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oh, snapp!</span> Some error message.</p>
                       </div> -->
                      
-                        
-                        <!-- <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this TODO?</h3> -->
-                        <button @click="createConfirm" data-modal-hide="popup-modal" type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 green:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                            Create
+                        <button @click="createEditConfirm" data-modal-hide="popup-modal" type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 green:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                            {{ selectedId ? 'Edit' : 'Create' }}
                         </button>
-                        <button @click="createModalOpen = !createModalOpen" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">cancel</button>
+                        <button @click="createEditModalOpen = !createEditModalOpen" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">cancel</button>
                       </form>
                     </div>
               </div>
@@ -74,9 +72,10 @@
     
     <div class="sm:w-11/12 md:w-11/12 lg:w-6/12 w-11/12 font-sans bg-white border border-gray-200 rounded-xl shadow  dark:bg-gray-800 dark:border-gray-700 p-3 ">
       <button @click="createItem()" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-        <svg width="40" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg width="30" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path clip-rule="evenodd" fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"></path>
         </svg>
+        <span class="mr-2">Add New</span>
       </button>
       <div v-for="item in toDoList" :key="item.id">
         <listItemComponent :single-item="item" >
@@ -95,8 +94,8 @@ import deleteIcon from "@/components/icons/iconCustomDelete.vue"
 import editIcon from "@/components/icons/iconEdit.vue"
 import duplicateIcon from "@/components/icons/iconDuplicate.vue"
 import listItemComponent from "@/components/listItemComponent.vue"
-import createFormComponent from "@/components/createFormComponent.vue"
-import {uuidv4,extractDate} from "@/helper/helper"
+//import createFormComponent from "@/components/createFormComponent.vue"
+import {uuidv4} from "@/helper/helper"
 import store from "@/store";
 import {onMounted, ref, watch, computed} from "vue";
 import BaseTextField from "../components/baseTextField.vue"
@@ -109,9 +108,8 @@ onMounted(()=>{
   
 })
 const isOpen = ref(false)
-const createModalOpen = ref(false)
+const createEditModalOpen = ref(false)
 const selectedId = ref('')
-const createForm = ref(null)
 const title =ref('')
 const description =ref('')
 const date =ref(null)
@@ -120,40 +118,47 @@ const toDoList = computed(()=>{
   return store.getters['app/getToDoList']
 })
 const createItem = ()=>{
-  createModalOpen.value = true
+  createEditModalOpen.value = true
 }
-const createConfirm = async()=>{
-const newId = uuidv4()
-if(title.value && description.value && date.value){
-  const dateString = await extractDate(date.value);
-  errorForm.value= false
-  await store.dispatch("app/addToDoList",{title:title.value,description:description.value,date:dateString,id:newId.value})
-  createModalOpen.value = false
-  title.value,description.value,date.value = ''
-}else{
-  errorForm.value= true
-}
-
+const createEditConfirm = async()=>{
+  if(title.value && description.value && date.value){
+    if(selectedId.value){
+      await store.dispatch("app/editToDoList",{id:selectedId.value,title:title.value,description:description.value,date:date.value})
+    }else{
+      let newId = await uuidv4()
+      await store.dispatch("app/addToDoList",{title:title.value,description:description.value,date:date.value,id:newId})
+    }
+      createEditModalOpen.value = false
+      errorForm.value= false
+      title.value,description.value,date.value = ''
+  }else{
+    errorForm.value= true
+  }
 }
 const deleteItem = (item) =>{
   selectedId.value = item.id
   isOpen.value = true
 
-// console.log(items)
-//  console.log(item);
 }
 const confirmDelete = ()=>{
-  let items = [...toDoList.value]
-  const index = items.findIndex((i) => {
-  return i.id == selectedId.value;
-})
-items.splice(index, 1);
-store.dispatch("app/setToDoList",items)
+  store.dispatch("app/deleteFromToDoList",selectedId.value)
+//   let items = [...toDoList.value]
+//   const index = items.findIndex((i) => {
+//   return i.id == selectedId.value;
+// })
+// items.splice(index, 1);
+// store.dispatch("app/setToDoList",items)
+selectedId.value = '';
 isOpen.value = false
 }
 
 const editItem = (item) =>{
-  console.log(item);
+  selectedId.value = item.id;
+  title.value = item.title;
+  description.value = item.description;
+  date.value = item.date;
+  createEditModalOpen.value = true
+  
 }
 
 const duplicateItem = async(item) =>{
@@ -162,6 +167,15 @@ const duplicateItem = async(item) =>{
   newItem.id = newId
   store.dispatch("app/addToDoList",newItem)
 }
+watch(createEditModalOpen, (currentValue, oldValue) => {
+      if(!currentValue){
+        selectedId.value = ''
+        title.value = ''
+        description.value = '';
+        date.value = ''
+      }
+    });
+
 
 </script>
 <style scoped>

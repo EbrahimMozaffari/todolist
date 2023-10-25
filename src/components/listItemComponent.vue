@@ -6,7 +6,7 @@
        <div class="ml-2 basis-11/12 text-sm  mr-1">
            <label :for="`helper-checkbox`+singleItem?.id" class="font-medium text-gray-900 dark:text-gray-300">{{singleItem.title}}</label>
            <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">{{singleItem.description}}</p>
-           <span class="flex mt-3 text-white"><dateIcon class="mr-1" />{{singleItem.date}}</span>
+           <span class="flex mt-3 text-white"><dateIcon class="mr-1" />{{changeDate(singleItem.date)}}</span>
          </div>
        <div class="flex flex-col">
         <slot></slot>
@@ -17,11 +17,15 @@
 
 <script setup>
 import dateIcon from "../components/icons/iconDate.vue"
-
+import {extractDate} from "@/helper/helper"
 const props = defineProps({
   singleItem: {
     type: Object,
   },
 
 });
+
+const changeDate = (date)=>{
+  return extractDate(date)
+}
 </script>

@@ -81,6 +81,7 @@ export const actions = {
     items[index].title = payload.title
     items[index].description = payload.description
     items[index].date = payload.date
+    items[index].status = payload.status ? payload.status : '' ;
     commit('SET_TODOLIST',items)
   },
   resetState({ commit }) {
